@@ -20,8 +20,8 @@ before_install:
 
 # build with coverage
 script:
-  - sbt clean coverage test coverageReport &&
-    sbt coverageAggregate
+  - ./sbt clean coverage test coverageReport &&
+    ./sbt coverageAggregate
 
 # coveralls integration
 after_success:
