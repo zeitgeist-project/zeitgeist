@@ -70,7 +70,6 @@ object LambdaHTTPApi {
         }
         """
 
-        println(s"$cls; $obj")
         q"$cls; $obj"
 
       case Nil ⇒
