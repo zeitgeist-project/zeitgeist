@@ -2,12 +2,11 @@ import sbt.Keys.{libraryDependencies, publishTo}
 
 name := "zeitgeist-lambda"
 
-val projectVersion        = "0.0.1-SNAPSHOT"
-val projectOrg            = "cloud.zeitgeist"
+val projectVersion        = "0.0.1"
+val projectOrg            = "com.virtuslab.zeitgeist"
 
 val awsLambdaVersion      = "1.1.0"
-val awsLambdaEventsVer    = "1.3.0"
-val awsLambdaLog4jVer     = "1.0.0"
+val awsLambdaEventsVer    = "2.2.4"
 val metaParadiseVersion   = "3.0.0-M11"
 val awsSdkVersion         = "1.11.52"
 
@@ -22,9 +21,8 @@ lazy val commonSettings = Seq(
     "org.json4s" %% "json4s-jackson" % "3.5.0.RC1",
     "commons-io" % "commons-io" % "2.4",
 
-    "ch.qos.logback" % "logback-classic" % "1.1.7" % Test,
-    "org.scalatest" %% "scalatest" % "3.0.0" % Test,
-    "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0" % Test
+    "org.apache.logging.log4j" %% "log4j-api-scala" % "11.0",
+    "org.scalatest" %% "scalatest" % "3.0.0" % Test
   ),
   scalacOptions := Seq(
     "-encoding",
@@ -69,7 +67,7 @@ lazy val api = (project in file("api")).
     libraryDependencies ++= Seq(
       "com.amazonaws" % "aws-lambda-java-core" % awsLambdaVersion,
       "com.amazonaws" % "aws-lambda-java-events" % awsLambdaEventsVer,
-      "com.amazonaws" % "aws-lambda-java-log4j" % awsLambdaLog4jVer
+      "com.amazonaws" % "aws-lambda-java-log4j2" % "1.1.0"
     )
   ).dependsOn(util)
 
