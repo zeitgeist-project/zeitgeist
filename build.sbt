@@ -2,10 +2,10 @@ import sbt.Keys.{libraryDependencies, publishTo}
 
 name := "zeitgeist-lambda"
 
-val projectVersion        = "0.0.1"
+val projectVersion        = "0.0.3"
 val projectOrg            = "com.virtuslab.zeitgeist"
 
-val awsLambdaVersion      = "1.1.0"
+val awsLambdaVersion      = "1.2.0"
 val awsLambdaEventsVer    = "2.2.4"
 val metaParadiseVersion   = "3.0.0-M11"
 val awsSdkVersion         = "1.11.52"
@@ -17,7 +17,6 @@ lazy val commonSettings = Seq(
   retrieveManaged := true,
 
   libraryDependencies ++= Seq(
-    "org.scalactic" %% "scalactic" % "3.0.0",
     "org.json4s" %% "json4s-jackson" % "3.5.0.RC1",
     "commons-io" % "commons-io" % "2.4",
 
