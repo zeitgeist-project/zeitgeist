@@ -13,7 +13,7 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
 addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
 
-val zeitgeistSbtVersion = "0.0.5"
+val zeitgeistSbtVersion = "0.0.6"
 
 addSbtPlugin("com.virtuslab.zeitgeist" % "sbt-lambda" % zeitgeistSbtVersion)
 addSbtPlugin("com.virtuslab.zeitgeist" % "sbt-api-gateway" % zeitgeistSbtVersion)
