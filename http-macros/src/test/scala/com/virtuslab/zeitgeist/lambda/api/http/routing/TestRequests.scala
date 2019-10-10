@@ -1,6 +1,7 @@
 package com.virtuslab.zeitgeist.lambda.api.http.routing
 
 object TestRequests {
+  // https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
   val sampleRequestPost =
     """
       |{
@@ -51,10 +52,7 @@ object TestRequests {
       |        "httpMethod": "POST",
       |        "apiId": "f7hyd8m7yl"
       |    },
-      |    "body": {
-      |       "foo": "I will not buy this record, it is scratched.",
-      |       "bar": "my hovercraft is full of eels!"
-      |    }
+      |    "body": "{ \"foo\": \"I will not buy this record, it is scratched.\", bar\": \"my hovercraft is full of eels!\" }"
       |}
     """.stripMargin
 
@@ -112,10 +110,7 @@ object TestRequests {
       |        "httpMethod": "PUT",
       |        "apiId": "f7hyd8m7yl"
       |    },
-      |    "body": {
-      |       "foo": "I will not buy this record, it is scratched.",
-      |       "bar": "my hovercraft is full of eels!"
-      |    }
+      |    "body": "{ \"foo\": \"I will not buy this record, it is scratched.\", bar\": \"my hovercraft is full of eels!\" }"
       |}
     """.stripMargin
 
@@ -166,10 +161,7 @@ object TestRequests {
       |        "httpMethod": "POST",
       |        "apiId": "f7hyd8m7yl"
       |    },
-      |    "body": {
-      |       "foo": "I will not buy this record, it is scratched.",
-      |       "bar": "my hovercraft is full of eels!"
-      |    }
+      |    "body": "{ \"foo\": \"I will not buy this record, it is scratched.\", bar\": \"my hovercraft is full of eels!\" }"
       |}
     """.stripMargin
 

@@ -17,7 +17,7 @@ lazy val commonSettings = Seq(
   retrieveManaged := true,
 
   libraryDependencies ++= Seq(
-    "org.json4s" %% "json4s-jackson" % "3.5.0.RC1",
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.7",
     "commons-io" % "commons-io" % "2.4",
 
     "org.apache.logging.log4j" %% "log4j-api-scala" % "11.0",

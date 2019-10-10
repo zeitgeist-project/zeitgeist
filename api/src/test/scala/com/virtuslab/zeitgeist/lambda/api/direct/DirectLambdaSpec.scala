@@ -2,19 +2,16 @@ package com.virtuslab.zeitgeist.lambda.api.direct
 
 import java.io.{ByteArrayOutputStream, OutputStream}
 
-import com.virtuslab.zeitgeist.lambda.api.{LambdaContext, LambdaSpec}
+import com.fasterxml.jackson.databind.JsonNode
+import com.virtuslab.zeitgeist.lambda.api.JsonSupport._
+import com.virtuslab.zeitgeist.lambda.api.{LambdaContext, LambdaSpec, Utils}
 import org.apache.commons.io.IOUtils
-import org.json4s.jackson.Serialization
-import org.json4s.jackson.Serialization._
-import org.json4s.{NoTypeHints, _}
 import org.scalatest.{MustMatchers, WordSpec}
 
 class DirectLambdaSpec extends WordSpec with MustMatchers with LambdaSpec {
-  protected implicit val formats = Serialization.formats(NoTypeHints)
-
   "Running a direct request to lambda" should {
     "handle simple case with String input / simple json response" in {
-      val inputJson = write("testInput")
+      val inputJson = toJsonString("testInput")
       val outputStream = new ByteArrayOutputStream()
 
       val server = new LambdaServer("bam")
@@ -26,7 +23,7 @@ class DirectLambdaSpec extends WordSpec with MustMatchers with LambdaSpec {
     }
 
     "handle simple case with String input / case class output" in {
-      val inputJson = write("testInput")
+      val inputJson = toJsonString("testInput")
 
       val outputStream1 = new ByteArrayOutputStream()
       val result1 = TestResult("string", 4, None)
@@ -34,7 +31,7 @@ class DirectLambdaSpec extends WordSpec with MustMatchers with LambdaSpec {
       server1.handleRequest(IOUtils.toInputStream(inputJson), outputStream1, new ContextImpl)
 
       val output1 = new String(outputStream1.toByteArray)
-      output1 must be(write(result1))
+      output1 must be(toJsonString(result1))
 
 
       val outputStream2 = new ByteArrayOutputStream()
@@ -43,7 +40,7 @@ class DirectLambdaSpec extends WordSpec with MustMatchers with LambdaSpec {
       server2.handleRequest(IOUtils.toInputStream(inputJson), outputStream2, new ContextImpl)
 
       val output2 = new String(outputStream2.toByteArray)
-      output2 must be(write(result2))
+      output2 must be(toJsonString(result2))
     }
 
     "handle no input" in {
@@ -61,8 +58,8 @@ class DirectLambdaSpec extends WordSpec with MustMatchers with LambdaSpec {
 }
 
 class LambdaServer[T <: AnyRef](returnVal: T) extends DirectLambdaStreamingHandler {
-  override protected def handleEvent(json: JValue, output: OutputStream)(implicit ctx: LambdaContext) {
-    writeJson(output, returnVal)
+  override protected def handleEvent(json: JsonNode, output: OutputStream)(implicit ctx: LambdaContext) {
+    Utils.serializeResponse(output, returnVal)
   }
 }
 
