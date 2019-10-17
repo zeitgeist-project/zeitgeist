@@ -2,7 +2,7 @@ package com.virtuslab.zeitgeist.lambda.api.http
 
 import com.virtuslab.zeitgeist.lambda.api.{CoreLambdaApi, LambdaContext}
 
-package object http extends CoreLambdaApi with HTTPResponses with HTTPResponseMarshallers {
+package object http extends CoreLambdaApi with HTTPResponses {
 
   object HTTPMethod {
     def apply(method: String): HTTPMethod = method match {

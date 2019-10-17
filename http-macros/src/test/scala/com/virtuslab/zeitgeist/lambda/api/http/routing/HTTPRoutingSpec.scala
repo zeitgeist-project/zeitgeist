@@ -1,25 +1,18 @@
 package com.virtuslab.zeitgeist.lambda.api.http.routing
 
 import com.virtuslab.zeitgeist.lambda.api.LambdaSpec
-import com.virtuslab.zeitgeist.lambda.api.http.http.LambdaHTTPRequest
+import com.virtuslab.zeitgeist.lambda.api.http.http._
 import com.virtuslab.zeitgeist.lambda.api.http.macros.LambdaHTTPApi
 import com.virtuslab.zeitgeist.lambda.api.http.macros.macros._
 import com.virtuslab.zeitgeist.lambda.api.http.routing.TestRequests._
-import org.json4s.jackson.JsonMethods._
-import org.json4s.jackson.Serialization
-import org.json4s.jackson.Serialization._
-import org.json4s.{NoTypeHints, _}
 import org.scalatest.{MustMatchers, WordSpec}
+import com.virtuslab.zeitgeist.lambda.api.JsonSupport._
 
 class HTTPRoutingSpec extends WordSpec with MustMatchers with LambdaSpec {
-  protected implicit val formats = Serialization.formats(NoTypeHints)
-
   "Running a routing request" should {
     "allow a magnet response of an int" in {
       val input = sampleRequestPost
-      val json = parse(input)
-
-      val req = json.extract[LambdaHTTPRequest]
+      val req = readJsonValue[LambdaHTTPRequest](input)
 
       val server = new TestHTTPServer
       val handler = server.newHandler
@@ -33,9 +26,7 @@ class HTTPRoutingSpec extends WordSpec with MustMatchers with LambdaSpec {
 
     "allow a magnet response of a case class" in {
       val input = sampleRequestPut
-      val json = parse(input)
-
-      val req = json.extract[LambdaHTTPRequest]
+      val req = readJsonValue[LambdaHTTPRequest](input)
 
       val server = new TestHTTPServer
       val handler = server.newHandler
@@ -43,7 +34,7 @@ class HTTPRoutingSpec extends WordSpec with MustMatchers with LambdaSpec {
 
       response must have (
         'statusCode (200),
-        'body (Option(write(TestObject("OMG", "WTF"))))
+        'body (Option(toJsonString(TestObject("OMG", "WTF"))))
       )
     }
   }
@@ -51,9 +42,7 @@ class HTTPRoutingSpec extends WordSpec with MustMatchers with LambdaSpec {
   "Slack GET request" should {
     "work well in simple scenario" in {
       val input = sampleSlackGet
-      val json = parse(input)
-
-      val req = json.extract[LambdaHTTPRequest]
+      val req = readJsonValue[LambdaHTTPRequest](input)
 
       val server = new TestHTTPServer
       val handler = server.newHandler

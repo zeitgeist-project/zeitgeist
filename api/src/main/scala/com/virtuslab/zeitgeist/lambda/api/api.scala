@@ -10,4 +10,5 @@ trait ResponseMagnet {
 trait CoreLambdaApi {
 
   def complete(magnet: ResponseMagnet): magnet.Result = magnet()
+
 }
