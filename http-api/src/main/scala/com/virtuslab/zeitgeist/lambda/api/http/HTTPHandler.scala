@@ -1,16 +1,15 @@
 package com.virtuslab.zeitgeist.lambda.api.http
 
-import java.io.OutputStream
+import java.io.{InputStream, OutputStream}
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.virtuslab.zeitgeist.lambda.api.JsonSupport._
-import com.virtuslab.zeitgeist.lambda.api.LambdaContext
-import com.virtuslab.zeitgeist.lambda.api.direct.DirectLambdaStreamingHandler
+import com.amazonaws.services.lambda.runtime.{Context, RequestStreamHandler}
 import com.virtuslab.zeitgeist.lambda.api.http.http.{HTTPMethod, LambdaHTTPRequest, LambdaRequestContext}
 import com.virtuslab.zeitgeist.lambda.api.http.routing.{HTTPRoute, MethodRoute, PathRoutingResolver, RouteRequest}
+import com.virtuslab.zeitgeist.lambda.api.LambdaContext
+import com.virtuslab.zeitgeist.lambda.api.direct.DirectLambdaHandler
 import org.apache.logging.log4j.scala.Logger
 
-trait HTTPHandler extends DirectLambdaStreamingHandler {
+trait HTTPHandler extends RequestStreamHandler {
 
   protected val routeBuilder = Map.newBuilder[(HTTPMethod, String), HTTPRoute[_]]
 
@@ -18,10 +17,13 @@ trait HTTPHandler extends DirectLambdaStreamingHandler {
 
   lazy val routes = routeBuilder.result
 
-  override def handleEvent(json: JsonNode, output: OutputStream)(implicit ctx: LambdaContext) {
-    val req = objectMapper.treeToValue[LambdaHTTPRequest](json)
-    routeRequest(req, ctx)
+  private val directLambdaDelegate = new DirectLambdaHandler[LambdaHTTPRequest, LambdaHTTPResponse] {
+    override def processMessage(input: LambdaHTTPRequest, ctx: LambdaContext): LambdaHTTPResponse =
+      routeRequest(input, ctx)
   }
+
+  override def handleRequest(inputStream: InputStream, outputStream: OutputStream, context: Context): Unit =
+    directLambdaDelegate.handleRequest(inputStream, outputStream, context)
 
   def routeRequest(request: LambdaHTTPRequest, context: LambdaContext): LambdaHTTPResponse = {
     handlerByResource(request)
