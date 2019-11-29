@@ -2,7 +2,7 @@ import sbt.Keys.{libraryDependencies, publishTo}
 
 name := "zeitgeist-lambda"
 
-val projectVersion        = "0.0.7"
+val projectVersion        = "0.0.8-SNAPSHOT"
 val projectOrg            = "com.virtuslab.zeitgeist"
 
 val awsLambdaVersion      = "1.2.0"
