@@ -2,7 +2,7 @@ import sbt.Keys.{libraryDependencies, publishTo}
 
 name := "zeitgeist-lambda"
 
-val projectVersion        = "0.0.8-SNAPSHOT"
+val projectVersion        = "0.0.9-SNAPSHOT"
 val projectOrg            = "com.virtuslab.zeitgeist"
 
 val awsLambdaVersion      = "1.2.0"
@@ -13,7 +13,7 @@ val awsSdkVersion         = "1.11.52"
 lazy val commonSettings = Seq(
   organization := projectOrg,
   version := projectVersion,
-  scalaVersion := "2.12.7",
+  scalaVersion := "2.12.8",
   retrieveManaged := true,
 
   libraryDependencies ++= Seq(
@@ -33,8 +33,9 @@ lazy val commonSettings = Seq(
   ),
   fork in (Test, run) := true,
 
-  bintrayOrganization := Some("zeitgeist"),
-  licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+  bintrayOrganization := Some("virtuslab"),
+  bintrayRepository := "libs",
+  licenses += "MIT" -> url("http://opensource.org/licenses/MIT")
 )
 
 lazy val root = (project in file(".")).
