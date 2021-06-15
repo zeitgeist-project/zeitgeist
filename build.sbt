@@ -2,13 +2,12 @@ import sbt.Keys.{libraryDependencies, publishTo}
 
 name := "zeitgeist-lambda"
 
-val projectVersion        = "0.0.9-SNAPSHOT"
+val projectVersion        = "0.1.0-SNAPSHOT"
 val projectOrg            = "com.virtuslab.zeitgeist"
 
 val awsLambdaVersion      = "1.2.0"
 val awsLambdaEventsVer    = "2.2.4"
-val metaParadiseVersion   = "3.0.0-M11"
-val awsSdkVersion         = "1.11.52"
+val awsSdkVersion         = "1.11.1034"
 
 lazy val commonSettings = Seq(
   organization := projectOrg,
@@ -31,11 +30,27 @@ lazy val commonSettings = Seq(
     "-language:_"/*,
     "-Ymacro-debug-lite"*/
   ),
-  fork in (Test, run) := true,
+  Test / run / fork := true,
 
-  bintrayOrganization := Some("virtuslab"),
-  bintrayRepository := "libs",
-  licenses += "MIT" -> url("http://opensource.org/licenses/MIT")
+  licenses += "MIT" -> url("http://opensource.org/licenses/MIT"),
+
+  credentials ++= {
+    val credentialsFile = Path.userHome / ".sbt" / ".credentials.zeitgeist"
+    if (credentialsFile.exists())
+      Seq(Credentials(credentialsFile))
+    else if (sys.env.contains("CLOUDSMITH_USERNAME") && sys.env.contains("CLOUDSMITH_PASSWORD"))
+      Seq(Credentials("Cloudsmith API", "maven.cloudsmith.io", sys.env("CLOUDSMITH_USERNAME"), sys.env("CLOUDSMITH_PASSWORD")))
+    else
+      Nil
+  },
+
+  publishTo := {
+    val repo = "https://maven.cloudsmith.io/zeitgeist-project/"
+    if (isSnapshot.value)
+      Some("Cloudsmith Snapshots" at repo + "snapshots")
+    else
+      Some("Cloudsmith Releases" at repo + "releases")
+  }
 )
 
 lazy val root = (project in file(".")).
@@ -46,7 +61,6 @@ lazy val root = (project in file(".")).
     version := projectVersion,
     publishArtifact := false,
     publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))),
-    bintrayRelease := {}
   ).
   aggregate(
     util, httpMacros, httpApi, api, demo
@@ -99,13 +113,13 @@ lazy val demo = (project in file("demo")).
     awsLambdaTimeout := 30,
     region := "eu-west-1",
 
-    publishArtifact in (Compile, packageDoc) := false
+    Compile / packageDoc / publishArtifact := false,
   ).
   dependsOn(httpMacros, httpApi).
   enablePlugins(AWSLambdaPlugin, AwsApiGatewayPlugin)
 
 
-assemblyMergeStrategy in assembly := {
+assembly / assemblyMergeStrategy := {
   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
   case x => MergeStrategy.first
 }
